@@ -75,6 +75,10 @@ The script will calculate the time remaining until the next scheduled run and wa
 3. Update `sp500_data.csv`.
 4. Sync the entire CSV content to your Google Sheet.
 
+To run a one-off update of the data and Google Sheet:
+- Run `get_sp500_data.py` to fetch data.
+- Run `update_google_sheet.py` to sync to Google Sheets.
+
 ## 📊 Data Structure
 
 The generated `sp500_data.csv` uses the following format:
