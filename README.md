@@ -26,7 +26,18 @@ An automated Python utility that tracks daily closing prices for all S&P 500 com
 - **Python 3.13+**
 - **Google Cloud Account:**
   - A project with the **Google Sheets API** and **Google Drive API** enabled.
-  - A **Service Account** with a generated `credentials.json` key file.
+  - A **Service Account** with a generated `credentials.json` key file. An example is
+  ```json
+  {
+    "type": "service_account",
+    "project_id": "api-project-XXX",
+    "private_key_id": "2cd … ba4",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nNrDyLw … jINQh/9\n-----END PRIVATE KEY-----\n",
+    "client_email": "473000000000-yoursisdifferent@developer.gserviceaccount.com",
+    "client_id": "473 … hd.apps.googleusercontent.com",
+    ...
+  }
+  ```
   - A Google Sheet shared with the Service Account's email address.
 
 ## ⚙️ Setup & Installation
