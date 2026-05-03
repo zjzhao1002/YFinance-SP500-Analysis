@@ -1,0 +1,33 @@
+name: Daily Google Sheets Update
+
+on:
+  schedule:
+    # This runs at 17:00 UTC every day
+    - cron: '0 17 * * *'
+  workflow_dispatch: # Allows you to run it manually for testing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run script
+        env:
+          # This makes the secrets available to your Python script as environment variables
+          GCP_CREDENTIALS: ${{ secrets.GCP_SERVICE_ACCOUNT_FILE }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+          SHEET_NAME: "SP500 Closing Prices"
+        run: python main.py

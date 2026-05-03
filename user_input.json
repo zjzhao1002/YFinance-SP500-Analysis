@@ -1,7 +1,0 @@
-{
-    "sheet_id": "YOUR_GOOGLE_SHEET_ID", 
-    "csv_file": "sp500_data.csv",
-    "credentials_file": "credentials.json",
-    "sheet_name": "SP500",
-    "schedule_time": "17:00"
-}
