@@ -34,8 +34,8 @@ An automated Python utility that tracks daily closing prices for all S&P 500 com
 ### Local Setup
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/yahoo-finance-sp500.git
-   cd yahoo-finance-sp500
+   git clone https://github.com/zjzhao1002/YFinance-SP500-Analysis.git
+   cd YFinance-SP500-Analysis
    ```
 
 2. **Install dependencies:**
@@ -51,12 +51,14 @@ An automated Python utility that tracks daily closing prices for all S&P 500 com
    ```
 
 ### GitHub Actions Setup (For Daily Automation)
-To enable daily updates, add the following **Secrets** to your GitHub repository (**Settings > Secrets and variables > Actions**):
+To enable daily updates, please fork this repository and add the following **Secrets** to your forked repository (**Settings > Secrets and variables > Actions**):
 
 1.  `GCP_SERVICE_ACCOUNT_FILE`: The **entire content** of your `credentials.json` file.
 2.  `SHEET_ID`: Your Google Sheet ID.
 
-The workflow is set to run daily at 22:00 UTC.
+The workflow is set to run daily at 22:00 UTC. 
+You can change it in the `.github/workflows/daily_runner.yml` file. 
+Optionally, you can also change the `SHEET_NAME` in the workflow file.
 
 ## 🚀 Usage
 
