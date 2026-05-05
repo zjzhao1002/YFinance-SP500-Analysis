@@ -18,7 +18,7 @@ This project is an automated Python utility designed to track the daily closing 
     - Downloading the latest closing prices for all tickers.
     - Merging new data with existing historical data.
     - Updating the specified Google Sheet by adding a new column for the current day.
-- `.github/workflows/daily_runner.yml`: GitHub Actions workflow that runs the tracker daily at 17:00 UTC.
+- `.github/workflows/daily_runner.yml`: GitHub Actions workflow that runs the tracker daily at 22:00 UTC.
 
 ---
 

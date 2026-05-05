@@ -23,7 +23,8 @@ class SP500Tracker:
     def get_sp500_tickers(self) -> list:
         if self.check_sheet_name():
             worksheet = self.workbook.worksheet(self.sheet_name) 
-            tickers = worksheet.col_values(1)[1:]  # Skip header
+            # Get all values from the first column and strip whitespace
+            tickers = [str(t).strip() for t in worksheet.col_values(1)[1:] if t]
             return tickers
 
         print("Sheet not found. Fetching tickers from Wikipedia...")
@@ -35,40 +36,66 @@ class SP500Tracker:
             df = tables[0]
             tickers = df['Symbol'].tolist()
             # Yahoo Finance uses '-' instead of '.' in symbols (e.g., BRK.B -> BRK-B)
-            tickers = [ticker.replace('.', '-') for ticker in tickers]
+            # Also strip any accidental whitespace
+            tickers = [str(ticker).replace('.', '-').strip() for ticker in tickers]
             return tickers
         except Exception as e:
-            print(f"Error fetching tickers: {e}")
+            print(f"Error fetching tickers from Wikipedia: {e}")
             return []
 
     def fetch_sp500_data(self) -> pd.DataFrame:
         if self.check_sheet_name():
             worksheet = self.workbook.worksheet(self.sheet_name)
-            self.df = pd.DataFrame(worksheet.get_all_records())
+            records = worksheet.get_all_records()
+            self.df = pd.DataFrame(records)
+            if not self.df.empty and 'Ticker' in self.df.columns:
+                self.df['Ticker'] = self.df['Ticker'].astype(str).str.strip()
         else:
             self.df = pd.DataFrame()
 
         tickers = self.get_sp500_tickers()
+        if not tickers:
+            print("No tickers found to download.")
+            return self.df
 
         print(f"Downloading closing prices for {len(tickers)} stocks...")
-        # Fetch the most recent closing prices
-        data = yf.download(tickers, period="1d", interval="1d")
+        # Fetch the most recent closing prices. Using 5d to ensure we get the latest data.
+        data = yf.download(tickers, period="5d", interval="1d", progress=False)
 
         if data is not None and 'Close' in data.columns:
-            closing_prices = data['Close'].iloc[-1]
+            # Get the last row that is not all NaN
+            closing_prices_df = data['Close'].dropna(how='all')
+            if closing_prices_df.empty:
+                print("Error: All downloaded closing prices are NaN.")
+                return self.df
+            
+            closing_prices = closing_prices_df.iloc[-1]
+            # Strip index just in case yfinance returns them with spaces (unlikely but safe)
+            closing_prices.index = closing_prices.index.str.strip()
+            
             current_date = datetime.now().strftime("%Y-%m-%d")
+            
             if self.df.empty:
                 self.df = pd.DataFrame({
                     'Ticker': closing_prices.index,
                     current_date: closing_prices.values
                 })
-            elif current_date not in self.df.columns:
-                self.df[current_date] = self.df['Ticker'].map(closing_prices)
+            elif 'Ticker' in self.df.columns:
+                if current_date not in self.df.columns:
+                    print(f"Mapping new data for {current_date}...")
+                    self.df[current_date] = self.df['Ticker'].map(closing_prices)
+                    
+                    # Log if we have a lot of NaNs after mapping
+                    nan_count = self.df[current_date].isna().sum()
+                    if nan_count > 0:
+                        print(f"Warning: {nan_count} tickers could not be matched or have no data.")
+                else:
+                    print(f"No data update needed. Closing prices for {current_date} are already present.")
             else:
-                print("No data update needed. Closing prices for today are already present.")
+                print("Error: 'Ticker' column missing from existing data.")
             return self.df
         else:
-            print("Error fetching new data from Yahoo Finance.")
+            print("Error: Could not find 'Close' prices in Yahoo Finance data.")
             return self.df
         
     def update_google_sheet(self) -> None:

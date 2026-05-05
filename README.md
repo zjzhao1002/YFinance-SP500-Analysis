@@ -12,7 +12,7 @@ An automated Python utility that tracks daily closing prices for all S&P 500 com
 - **Automated Ticker Discovery:** Automatically retrieves the current S&P 500 constituent list from Wikipedia.
 - **Daily Data Tracking:** Downloads daily closing prices using `yfinance`.
 - **Google Sheets Integration:** Seamlessly syncs data to a specified Google Sheet, adding a new column for each day.
-- **Automated Execution:** Pre-configured GitHub Actions workflow to run the sync every day at 17:00 UTC.
+- **Automated Execution:** Pre-configured GitHub Actions workflow to run the sync every day at 22:00 UTC.
 - **Symbol Mapping:** Automatically handles symbol differences (e.g., converting `BRK.B` to `BRK-B` for Yahoo Finance).
 
 ## 🛠️ Architecture
@@ -56,7 +56,7 @@ To enable daily updates, add the following **Secrets** to your GitHub repository
 1.  `GCP_SERVICE_ACCOUNT_FILE`: The **entire content** of your `credentials.json` file.
 2.  `SHEET_ID`: Your Google Sheet ID.
 
-The workflow is set to run daily at 17:00 UTC.
+The workflow is set to run daily at 22:00 UTC.
 
 ## 🚀 Usage
 
