@@ -103,6 +103,8 @@ class SP500Tracker:
             print("No data to update.")
             return
         
+        self.df = self.df.fillna('')  # Replace NaN with empty string for Google Sheets compatibility
+        
         current_date = datetime.now().strftime("%Y-%m-%d")
 
         try:
