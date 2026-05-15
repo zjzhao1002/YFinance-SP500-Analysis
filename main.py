@@ -19,4 +19,7 @@ if __name__ == "__main__":
 
     tracker = SP500Tracker(sheet_id=sheet_id, credentials_dict=credentials_dict, sheet_name=sheet_name)
     df = tracker.fetch_sp500_data()
+    df_transposed = tracker.transpose_dataset()
+    print(df_transposed)
     tracker.update_google_sheet()
+    tracker.update_google_sheet_transposed()

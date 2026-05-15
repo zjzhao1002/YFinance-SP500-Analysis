@@ -98,6 +98,15 @@ class SP500Tracker:
             print("Error: Could not find 'Close' prices in Yahoo Finance data.")
             return self.df
         
+    def transpose_dataset(self):
+        df_transposed = self.df.transpose().reset_index()
+        new_header = df_transposed.iloc[0].values
+        df_transposed = df_transposed[1:]
+        df_transposed.columns = new_header
+        df_transposed = df_transposed.rename(columns={'Ticker': 'Date'})
+        self.df_transposed = df_transposed
+        return self.df_transposed
+        
     def update_google_sheet(self) -> None:
         if self.df.empty:
             print("No data to update.")
@@ -150,3 +159,45 @@ class SP500Tracker:
                 print(f"Created and updated new sheet: {self.sheet_name}")
         except Exception as e:
             print(f"Error updating Google Sheet: {e}")
+
+    def update_google_sheet_transposed(self) -> None:
+        if not hasattr(self, 'df_transposed') or self.df_transposed.empty:
+            print("No transposed data to update. Call transpose_dataset() first.")
+            return
+        
+        transposed_sheet_name = f"{self.sheet_name} Transposed"
+        self.df_transposed = self.df_transposed.fillna('')  # Replace NaN with empty string
+        
+        current_date = datetime.now().strftime("%Y-%m-%d")
+
+        try:
+            worksheet_list = [w.title for w in self.workbook.worksheets()]
+            if transposed_sheet_name in worksheet_list:
+                sheet = self.workbook.worksheet(transposed_sheet_name)
+                # Compare data: check if today's date is already in the sheet rows (Date column)
+                existing_dates = sheet.col_values(1)
+                
+                if current_date in existing_dates:
+                    print(f"Data for {current_date} already exists in the transposed sheet. No update needed.")
+                    return
+
+                print(f"Today's data ({current_date}) not found in transposed sheet. Adding new row...")
+                
+                # Get the row for today from df_transposed
+                today_row = self.df_transposed[self.df_transposed['Date'] == current_date]
+                if today_row.empty:
+                    print(f"Error: Today's data ({current_date}) is not in the transposed DataFrame.")
+                    return
+                
+                # Append the row values
+                row_values = today_row.values.tolist()[0]
+                sheet.append_row(row_values)
+                print(f"Successfully added row for {current_date} to {transposed_sheet_name}.")
+            else:
+                # Sheet doesn't exist, create it and upload everything
+                data = [self.df_transposed.columns.values.tolist()] + self.df_transposed.values.tolist()
+                sheet = self.workbook.add_worksheet(title=transposed_sheet_name, rows=len(data), cols=len(data[0]))
+                sheet.update('A1', data) # type: ignore
+                print(f"Created and updated new transposed sheet: {transposed_sheet_name}")
+        except Exception as e:
+            print(f"Error updating transposed Google Sheet: {e}")
