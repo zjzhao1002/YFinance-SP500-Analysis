@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 if __name__ == "__main__":
-    # Load configuration from user_input.json
+    # Load environment variables.
     sheet_id = os.getenv("SHEET_ID")
     credentials_dict = os.getenv("GCP_CREDENTIALS")
 
@@ -20,6 +20,6 @@ if __name__ == "__main__":
     tracker = SP500Tracker(sheet_id=sheet_id, credentials_dict=credentials_dict, sheet_name=sheet_name)
     df = tracker.fetch_sp500_data()
     df_transposed = tracker.transpose_dataset()
-    print(df_transposed)
+
     tracker.update_google_sheet()
     tracker.update_google_sheet_transposed()

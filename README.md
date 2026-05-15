@@ -4,8 +4,13 @@
 ![yfinance](https://img.shields.io/badge/data-yfinance-green.svg)
 ![Google Sheets](https://img.shields.io/badge/sync-Google%20Sheets-yellow.svg)
 ![GitHub Actions](https://img.shields.io/badge/CI/CD-GitHub%20Actions-orange.svg)
+![Looker Studio](https://img.shields.io/badge/Visualization-Looker%20Studio-blue.svg)
 
-An automated Python utility that tracks daily closing prices for all S&P 500 companies. It fetches market data from Yahoo Finance and synchronizes the results to a Google Sheet, providing both a standard and a transposed view for analysis.
+An automated Python utility designed to track and archive daily closing prices for all S&P 500 constituents. By leveraging `yfinance` for market data and `gspread` for seamless Google Sheets integration, it provides both standardized and transposed datasets optimized for downstream analysis and visualization.
+
+### 📊 Visualization
+The system is pre-configured for integration with Looker Studio, enabling automated dashboarding of market trends. 
+**[View Live S&P 500 Analysis Dashboard](https://datastudio.google.com/reporting/5ce93221-90e9-45e8-80c5-d82dd081106f)**
 
 ## 🚀 Features
 
@@ -15,6 +20,7 @@ An automated Python utility that tracks daily closing prices for all S&P 500 com
 - **Transposed Data Sync:** Automatically maintains a separate "Transposed" sheet where dates are rows and tickers are columns, ideal for time-series analysis and charting.
 - **Automated Execution:** Pre-configured GitHub Actions workflow to run the sync every day at 22:00 UTC.
 - **Symbol Mapping:** Automatically handles symbol differences (e.g., converting `BRK.B` to `BRK-B` for Yahoo Finance compatibility).
+- **Visual Analytics:** Seamlessly integrates with Looker Studio for real-time, interactive data visualization and trend analysis.
 
 ## 🛠️ Architecture
 
