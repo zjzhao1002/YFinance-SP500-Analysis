@@ -22,12 +22,6 @@ The system is pre-configured for integration with Looker Studio, enabling automa
 - **Symbol Mapping:** Automatically handles symbol differences (e.g., converting `BRK.B` to `BRK-B` for Yahoo Finance compatibility).
 - **Visual Analytics:** Seamlessly integrates with Looker Studio for real-time, interactive data visualization and trend analysis.
 
-## 🛠️ Architecture
-
-- `main.py`: The entry point that initializes the tracker using environment variables and executes the sync process.
-- `sp500tracker.py`: The core class-based logic for fetching tickers, downloading prices, transposing data, and interacting with the Google Sheets API.
-- `.github/workflows/daily_runner.yml`: GitHub Actions configuration for daily automated runs and manual triggers.
-
 ## 📋 Prerequisites
 
 - **Python 3.13+**
@@ -36,48 +30,60 @@ The system is pre-configured for integration with Looker Studio, enabling automa
   - A **Service Account** with a generated `credentials.json` key file.
   - A Google Sheet created and **shared** with the Service Account's email address (with "Editor" permissions).
 
-## ⚙️ Setup & Installation
+## 💻 Local Setup & Usage
 
-### Local Setup
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/zjzhao1002/YFinance-SP500-Analysis.git
-   cd YFinance-SP500-Analysis
-   ```
+Follow these steps to run the tracker manually on your machine.
 
-2. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 1. Installation
+```bash
+# Clone the repository
+git clone https://github.com/zjzhao1002/YFinance-SP500-Analysis.git
+cd YFinance-SP500-Analysis
 
-3. **Configure environment variables:**
-   Create a `.env` file in the root directory:
-   ```env
-   SHEET_ID=your_google_sheet_id
-   GCP_CREDENTIALS={"type": "service_account", ...}  # Full JSON content of your credentials.json
-   SHEET_NAME=SP500 Closing Prices (Optional, defaults to this value)
-   ```
+# Install required dependencies
+pip install -r requirements.txt
+```
 
-### GitHub Actions Setup (For Daily Automation)
-To enable daily updates, add the following **Secrets** to your repository (**Settings > Secrets and variables > Actions**):
+### 2. Configuration
+Create a `.env` file in the root directory to store your credentials:
+```env
+SHEET_ID=your_google_sheet_id
+GCP_CREDENTIALS={"type": "service_account", ...}  # Full JSON content of your service account key
+SHEET_NAME=SP500 Closing Prices (Optional)
+```
 
-1.  `GCP_SERVICE_ACCOUNT_FILE`: The **entire content** of your `credentials.json` file.
-2.  `SHEET_ID`: Your Google Sheet ID (found in the URL: `https://docs.google.com/spreadsheets/d/SHEET_ID/edit`).
-
-The workflow is scheduled to run daily at 22:00 UTC. You can modify this in `.github/workflows/daily_runner.yml`.
-
-## 🚀 Usage
-
-### Local Execution
-To run the tracker manually from your terminal:
+### 3. Execution
+Run the script to fetch data and update your Google Sheet immediately:
 ```bash
 python main.py
 ```
 
-### Manual Trigger on GitHub
-1. Navigate to the **Actions** tab in your GitHub repository.
-2. Select the **Daily Google Sheets Update** workflow.
-3. Click **Run workflow**.
+---
+
+## 🤖 GitHub Actions Setup (Automation)
+
+Fork this repository to enable automated daily updates using GitHub Actions.
+
+### 1. Fork the Repository
+Click the **Fork** button at the top of this page to create a copy in your own GitHub account.
+
+### 2. Configure Repository Secrets
+Navigate to **Settings > Secrets and variables > Actions** in your forked repository and add the following secrets:
+
+| Secret Name | Description |
+| :--- | :--- |
+| `GCP_SERVICE_ACCOUNT_FILE` | The **entire content** of your `credentials.json` service account key. |
+| `SHEET_ID` | Your Google Sheet ID (found in the URL: `docs.google.com/spreadsheets/d/SHEET_ID/edit`). |
+
+### 3. Automation & Manual Trigger
+- **Daily Updates:** The workflow is pre-set to run automatically every day at **22:00 UTC**.
+- **Manual Sync:** To run it immediately, go to the **Actions** tab, select **Daily Google Sheets Update**, and click **Run workflow**.
+
+## 🛠️ Architecture
+
+- `main.py`: The entry point that initializes the tracker using environment variables and executes the sync process.
+- `sp500tracker.py`: The core class-based logic for fetching tickers, downloading prices, transposing data, and interacting with the Google Sheets API.
+- `.github/workflows/daily_runner.yml`: GitHub Actions configuration for daily automated runs and manual triggers.
 
 ## 🛡️ Security Note
 
