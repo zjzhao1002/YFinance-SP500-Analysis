@@ -42,7 +42,7 @@ SHEET_NAME=SP500 Closing Prices (Optional)
 ### Commands
 - **Install Dependencies:**
   ```bash
-  pip install -r requirements.txt
+  pip install .
   ```
 - **Run the Tracker:**
   ```bash

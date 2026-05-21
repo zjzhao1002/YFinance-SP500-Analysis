@@ -26,3 +26,11 @@ credentials.json
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Python build and packaging artifacts
+*.egg-info/
+build/
+dist/
+
+# Tool Configuration
+.antigravitycli/

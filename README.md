@@ -41,7 +41,7 @@ git clone https://github.com/zjzhao1002/YFinance-SP500-Analysis.git
 cd YFinance-SP500-Analysis
 
 # Install required dependencies
-pip install -r requirements.txt
+pip install .
 ```
 
 ### 2. Configuration
